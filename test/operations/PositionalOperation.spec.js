@@ -69,7 +69,7 @@ describe('Mockgoose $ positional Tests', function () {
                                         expect(result.grades[1].std).toBe(6);
                                         done();
                                     }
-                                })
+                                });
                             });
                         });
                 });
