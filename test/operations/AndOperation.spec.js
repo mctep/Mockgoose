@@ -1,4 +1,4 @@
-ddescribe('Mockgoose $and Tests', function () {
+describe('Mockgoose $and Tests', function () {
     'use strict';
 
     var mockgoose = require('./../../Mockgoose');
@@ -19,12 +19,7 @@ ddescribe('Mockgoose $and Tests', function () {
         Model.create(
             {
                 price: 1.99,
-                qty: 19,
-                sale: true
-            },
-            {
-                price: 1.99,
-                qty: 19,
+                qty: 21,
                 sale: true
             },
             {
@@ -35,10 +30,15 @@ ddescribe('Mockgoose $and Tests', function () {
             {
                 price: 1.99,
                 qty: 19,
+                sale: true
+            },
+            {
+                price: 1.99,
+                qty: 21,
                 sale: false
             }, {
                 price: 1,
-                qty: 19,
+                qty: 21,
                 sale: false
             }
         ).then(function () {
@@ -57,7 +57,7 @@ ddescribe('Mockgoose $and Tests', function () {
         it('Find values that match $and operation', function (done) {
             Model.find({ $and: [
                 { price: 1.99 },
-                { qty: { $lt: 20 } },
+                { qty: { $gt: 20 } },
                 { sale: true }
             ] }).exec().then(function (results) {
                     expect(results.length).toBe(2);
@@ -66,7 +66,7 @@ ddescribe('Mockgoose $and Tests', function () {
         });
 
         it('Find values that match implicit $and operation', function (done) {
-            Model.find({ price: 1.99, qty: { $lt: 20 }, sale: true }).exec().then(function (results) {
+            Model.find({ price: 1.99, qty: { $gt: 20 }, sale: true }).exec().then(function (results) {
                 expect(results.length).toBe(2);
                 done();
             });
@@ -75,7 +75,7 @@ ddescribe('Mockgoose $and Tests', function () {
         it('Perform the $and operation on a single field', function (done) {
             Model.update({ $and: [
                 { price: { $ne: 1.99 } },
-                { price: { $exists: true } }
+                { price: { $gt: 0 } }
             ] }, { $set: { qty: 15 } }).exec().then(function (result) {
                     expect(result).toBe(1);
                     done();
@@ -83,7 +83,7 @@ ddescribe('Mockgoose $and Tests', function () {
         });
 
         it('Perform the $and operation on a single field combined', function (done) {
-            Model.update({ price: { $ne: 1.99, $exists: true } }, { $set: { qty: 15 } }).exec().then(function (result) {
+            Model.update({ price: { $ne: 1.99, $gt: 0 } }, { $set: { qty: 15 } }).exec().then(function (result) {
                 expect(result).toBe(1);
                 done();
             });
@@ -94,7 +94,7 @@ ddescribe('Mockgoose $and Tests', function () {
             it('Find values with Mongoose and operation', function (done) {
                 Model.find().and([
                         { price: 1.99 },
-                        { qty: { $lt: 20 } },
+                        { qty: { $gt: 20 } },
                         { sale: true }
                     ]).exec().then(function (results) {
                         expect(results.length).toBe(2);
